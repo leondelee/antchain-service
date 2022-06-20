@@ -1,0 +1,23 @@
+server:
+  port: 8001
+mysql:
+  url: jdbc:mysql://49.234.137.37:3306/db_bbsgo?characterEncoding=utf-8
+  username: bbsgo_user
+  password: bbsgo_user123456789
+  driverClassName: com.mysql.jdbc.Driver
+logic:
+  variable: "yaml variable 123"
+mychain:
+  rest:
+    bizid: a00e36c5
+    cipher-suit: ec
+    rest-url: https://rest.baas.alipay.com
+    access-id: kG0deI2zCUALFHGC
+    access-secret: access.key
+    default-account: xunta_tech_test
+    default-account-key: user.key
+    default-account-pwd: LEEnideshengri123!
+    tenantid: 开发者配置
+    read-file-from-ext: false
+    account: xunta_tech_test
+    kmsId: 开发者配置

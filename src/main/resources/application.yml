@@ -1,0 +1,23 @@
+spring:
+  profiles:
+    active: dev
+  resources:
+    add-mappings: false
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+
+mychain:
+  rest:
+    bizid: a00e36c5
+    cipher-suit: ec
+    rest-url: https://rest.baas.alipay.com
+    access-id: kG0deI2zCUALFHGC
+    access-secret: access.key
+    default-account: xunta_tech_test
+    default-account-key: user.key
+    default-account-pwd: LEEnideshengri123!
+    tenantid: 开发者配置
+    read-file-from-ext: false
+    account: xunta_tech_test
+    kmsId: 开发者配置
