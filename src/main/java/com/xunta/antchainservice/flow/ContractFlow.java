@@ -4,6 +4,8 @@
  */
 package com.xunta.antchainservice.flow;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alipay.mychain.sdk.api.utils.Utils;
 import com.alipay.mychain.sdk.common.VMTypeEnum;
 import com.alipay.mychain.sdk.domain.account.Identity;
@@ -36,7 +38,8 @@ import com.alibaba.fastjson.JSONArray;
 @Service
 public class ContractFlow {
     private static final Logger logger = LoggerFactory.getLogger(ContractFlow.class);
-    private static final String CONTRACT_NAME = "credit_sol_test_20200309";
+//    private static final String CONTRACT_NAME = "my_erc1155_v1";
+    private static final String CONTRACT_NAME = "liangwei_test2";
     @Autowired
     private RestClient restClient;
 
@@ -44,75 +47,37 @@ public class ContractFlow {
     private RestClientProperties restClientProperties;
 
     public void runFlow() throws Exception {
-        //部署合约
-        String dsHash = deploySolidityContract();
-        queryResult(dsHash);
+        System.out.println(callSync());
         //建议在Cloud Ide部署完合约后，在使用下面的调用合约
-//        String csHash = callSolidityContract();
+//        String csHash = callSync();
         //解析合约返回值
 //        showOutPut(csHash);
     }
 
-    //部署Solidity合约 也可以通过Cloud Ide进行部署
-    public String deploySolidityContract() throws Exception {
-        String path = ContractFlow.class.getClassLoader().getResource("contract.txt").getPath();
-        byte[] creditBytes = FileUtils.readFileToByteArray(new File(path));
-        String hexString = new String(creditBytes);
-        System.out.println("文件" + hexString);
-        ClientParam clientParam = restClient.createDeployContractTransaction(restClientProperties.getDefaultAccount(), CONTRACT_NAME,
-                ByteUtils.hexStringToBytes(hexString), VMTypeEnum.EVM, 500000L);
-        BaseResp resp = restClient.chainCall(clientParam.getHash(), clientParam.getSignData(), Method.DEPLOYCONTRACT);
-        String deploySolidityContractHash = clientParam.getHash();
-        System.out.println("[ContractFlow-部署合约] Hash: " + deploySolidityContractHash + "   Result: " + resp);
-        return deploySolidityContractHash;
-    }
-
-    //部署带构造方法合约(需要使用密钥托管账户)
-    public String deploySolidityContract2() throws Exception {
-        CallRestBizParam restBizParam=  CallRestBizParam.builder().
-                // EVM合约部署方法名称，固定值
-                        method(Method.DEPLOYCONTRACTFORBIZASYNC).
-                // 唯一请求ID
-                        orderId(UUID.randomUUID().toString()).
-                // 执行交易的区块链账户
-                        account(restClientProperties.getAccount()).
-                // 执行交易的区块链账户KMS密钥ID
-                        mykmsKeyId(restClientProperties.getKmsId()).
-                // 合约名称
-                        contractName("deployContractName").
-                // 合约部署字节码
-                        contractCode("deployContent").
-                // 合约初始化方法签名
-                        methodSignature("").
-                // 合约初始化参数
-                        inputParamListStr("").
-                // 确保设置的Gas参数足够大，且执行创建的账户中有足够Gas，并且账户燃料要大于参数数值
-                        gas(100000L).
-                        build();
-        BaseResp resp = restClient.bizChainCallWithReceipt(restBizParam);
-        System.out.println("[ContractFlow-部署合约] Hash: " + restBizParam.getHash() + "   Result: " + resp);
-        return restBizParam.getHash();
-    }
-
     //调用Solidity合约
-    public String callSolidityContract() throws Exception {
-        JSONArray jsonArray = new JSONArray();
-        jsonArray.add(Utils.getIdentityByName(restClientProperties.getDefaultAccount()));
-        jsonArray.add(BigInteger.valueOf(100));
-        ClientParam clientParam = restClient.createCallContractTransaction(
-                restClientProperties.getDefaultAccount(),
-                CONTRACT_NAME,                          //合约名  可以修改为cloud ide中部署的合约名
-                "",                             //合约返回值类型
-                //合约方法签名  注意：1.中间不要带空格  2.只写参数类型,不要带参数名 如:uint256 a,uint256 b  3.参数类型填写争取  请不要填写如int  需要填写完整uint
-                "Issue(identity,uint256)",
-                jsonArray.toJSONString(),
-                false,
-                null,
-                300000L);
-        BaseResp resp = restClient.chainCall(clientParam.getHash(), clientParam.getSignData(), Method.CALLCONTRACT);
-        System.out.println("[CallContract-调用合约] Hash: " + clientParam.getHash() + "    Result:" + resp);
-        return clientParam.getHash();
+    public BaseResp callSync() throws Exception {
+        String orderId = "order_" + System.currentTimeMillis();
+        JSONArray inputList = new JSONArray();
+        inputList.add(Utils.getIdentityByName(restClientProperties.getDefaultAccount()));
+//        inputList.add(BigInteger.valueOf(100));
+        System.out.println(inputList);
+        JSONArray outputTypes = new JSONArray();
+        outputTypes.add("uint256");
+        CallRestBizParam callRestBizParam=CallRestBizParam.builder()
+                .orderId(orderId)
+                .bizid(restClientProperties.getBizid())
+                .account(restClientProperties.getDefaultAccount())
+                .contractName(CONTRACT_NAME)
+                .methodSignature("hello_view(identity)")
+                .inputParamListStr(JSON.toJSONString(inputList))
+                .outTypes(JSON.toJSONString(outputTypes))
+                .mykmsKeyId(restClientProperties.getKmsId())
+                .method(Method.CALLCONTRACTBIZ)
+                .tenantid(restClientProperties.getTenantid())
+                .gas(100000L).build();
+        return restClient.chainCallForBiz(callRestBizParam);
     }
+
 
     //查询交易是否成功
     public void queryResult(String hash) throws Exception {

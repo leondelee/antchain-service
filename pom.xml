@@ -59,9 +59,9 @@
         <dependency>
             <groupId>com.antfinancial.baas</groupId>
             <artifactId>mychain-rest-lib</artifactId>
-            <version>0.10.2.15.2</version>
+            <version>0.10.2.11</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/rest-client-2.15.2-SNAPSHOT-with-dependencies.jar</systemPath>
+            <systemPath>${project.basedir}/lib/mychain-rest-client-0.10.2.11-with-dependencies.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.aliyun.oss</groupId>

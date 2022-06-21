@@ -14,10 +14,10 @@ mychain:
     rest-url: https://rest.baas.alipay.com
     access-id: kG0deI2zCUALFHGC
     access-secret: access.key
-    default-account: xunta_tech_test
+    default-account: xunta_tech
     default-account-key: user.key
     default-account-pwd: LEEnideshengri123!
-    tenantid: 开发者配置
+    tenantid: CUALFHGC
     read-file-from-ext: false
-    account: xunta_tech_test
-    kmsId: 开发者配置
+    account: xunta_tech
+    kmsId: JiRp6i48CUALFHGC1655742491929
