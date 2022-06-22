@@ -39,7 +39,7 @@ import com.alibaba.fastjson.JSONArray;
 public class ContractFlow {
     private static final Logger logger = LoggerFactory.getLogger(ContractFlow.class);
 //    private static final String CONTRACT_NAME = "my_erc1155_v1";
-    private static final String CONTRACT_NAME = "liangwei_test2";
+    private static final String CONTRACT_NAME = "my_erc1155_v2";
     @Autowired
     private RestClient restClient;
 

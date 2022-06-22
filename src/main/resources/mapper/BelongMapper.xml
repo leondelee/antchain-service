@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xunta.antchainservice.dao.my_erc1155.BelongMapper">
+    <resultMap id="BaseResultMap" type="com.xunta.antchainservice.entity.my_erc1155.BelongMapperEntity">
+        <result property="tokenid" column="tokenid"/>
+        <result property="creator" column="creator"/>
+        <result property="owner" column="owner"/>
+        <result property="remaincount" column="remaincount"/>
+    </resultMap>
+
+    <select id="selectOneByTokenId" resultType="com.xunta.antchainservice.entity.my_erc1155.BelongMapperEntity">
+        SELECT tokenid, creator, owner, remaincount FROM t_belong_map WHERE tokenid = #{tokenid}
+    </select>
+
+    <select id="selectNByCreator" resultType="com.xunta.antchainservice.entity.my_erc1155.BelongMapperEntity">
+        SELECT tokenid, creator, owner, remaincount FROM t_belong_map WHERE creator = #{creator}
+    </select>
+
+    <select id="selectNByOwner" resultType="com.xunta.antchainservice.entity.my_erc1155.BelongMapperEntity">
+        SELECT tokenid, creator, owner, remaincount FROM t_belong_map WHERE owner = #{owner}
+    </select>
+
+    <insert id="insert" parameterType="com.xunta.antchainservice.entity.my_erc1155.BelongMapperEntity" keyProperty="tokenid" keyColumn="tokenid">
+        insert into
+        t_belong_map(tokenid, creator, owner, remaincount)
+        values(#{tokenid}, #{creator}, #{owner}, #{remainCount})
+    </insert>
+
+    <delete id="delete">
+        delete from
+        t_belong_map
+        where tokenid=#{tokenid}
+    </delete>
+
+    <update id="update" parameterType="com.xunta.antchainservice.entity.my_erc1155.BelongMapperEntity"  keyProperty="tokenid" useGeneratedKeys="true">
+        update t_belong_map
+        <set>
+            <if test="creator != null"> creator = #{creator},</if>
+            <if test="owner != null"> owner = #{owner},</if>
+            <if test="remaincount != null"> remaincount = #{remaincount},</if>
+        </set>
+        where tokenid = #{tokenid}
+    </update>
+</mapper>
