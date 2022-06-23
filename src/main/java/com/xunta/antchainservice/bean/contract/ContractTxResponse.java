@@ -1,5 +1,6 @@
 package com.xunta.antchainservice.bean.contract;
 
-public class BatchMintResponse {
+public class ContractTxResponse {
     public boolean success;
+    public String message;
 }

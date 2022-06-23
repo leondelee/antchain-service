@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xunta.antchainservice.dao.my_erc1155.TokenTrackerDao">
+    <resultMap id="BaseResultMap" type="com.xunta.antchainservice.entity.my_erc1155.TokenTrackerEntity">
+        <result property="tokenid" column="tokenid"/>
+        <result property="subtokenid" column="subtokenid"/>
+        <result property="creator" column="creator"/>
+        <result property="owner" column="owner"/>
+        <result property="createtime" column="createtime"/>
+        <result property="lastupdatetime" column="lastupdatetime"/>
+    </resultMap>
+
+    <select id="selectNByTokenId" resultType="com.xunta.antchainservice.entity.my_erc1155.TokenTrackerEntity">
+        SELECT tokenid, subtokenid, creator, owner, createtime, lastupdatetime FROM t_token_tracker WHERE tokenid = #{tokenid} and subtokenid=#{subtokenid}
+    </select>
+
+    <select id="selectOneBySubTokenId" resultType="com.xunta.antchainservice.entity.my_erc1155.TokenTrackerEntity">
+        SELECT tokenid, subtokenid, creator, owner, createtime, lastupdatetime FROM t_token_tracker WHERE subtokenid = #{subtokenid} and tokenid=#{tokenid}
+    </select>
+
+    <select id="selectNByCreator" resultType="com.xunta.antchainservice.entity.my_erc1155.TokenTrackerEntity">
+        SELECT tokenid, subtokenid, creator, owner, createtime, lastupdatetime FROM t_token_tracker WHERE creator = #{creator}
+    </select>
+
+    <select id="selectNByOwner" resultType="com.xunta.antchainservice.entity.my_erc1155.TokenTrackerEntity">
+        SELECT tokenid, subtokenid, creator, owner, createtime, lastupdatetime FROM t_token_tracker WHERE owner = #{owner}
+    </select>
+
+    <insert id="insert" parameterType="com.xunta.antchainservice.entity.my_erc1155.TokenTrackerEntity" keyProperty="tokenid,subtokenid" keyColumn="tokenid">
+        insert into
+        t_token_tracker(tokenid, subtokenid, creator, owner, createtime, lastupdatetime)
+        values(#{tokenid}, #{subtokenid}, #{creator}, #{owner}, #{createtime}, #{lastupdatetime})
+    </insert>
+
+    <delete id="deleteAllByTokenId">
+        delete from
+        t_token_tracker
+        where tokenid=#{tokenid}
+    </delete>
+
+    <delete id="deleteOneBySubTokenId">
+        delete from
+        t_token_tracker
+        where tokenid=#{tokenid} and subtokenid=#{subtokenid}
+    </delete>
+
+    <update id="update" parameterType="com.xunta.antchainservice.entity.my_erc1155.TokenTrackerEntity" keyProperty="tokenid,subtokenid" useGeneratedKeys="true">
+        update t_token_tracker
+        <set>
+            <if test="creator != null"> creator = #{creator},</if>
+            <if test="owner != null"> owner = #{owner},</if>
+            <if test="createtime != null"> createtime = #{createtime},</if>
+            <if test="lastupdatetime != null"> lastupdatetime = #{lastupdatetime},</if>
+        </set>
+        where tokenid = #{tokenid} and subtokenid=#{subtokenid}
+    </update>
+</mapper>

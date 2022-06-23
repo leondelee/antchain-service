@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xunta.antchainservice.dao.my_erc1155.TokenBalanceDao">
+    <resultMap id="BaseResultMap" type="com.xunta.antchainservice.entity.my_erc1155.TokenBalanceEntity">
+        <result property="tokenid" column="tokenid"/>
+        <result property="mintcount" column="mintcount"/>
+        <result property="remaincount" column="remaincount"/>
+        <result property="creator" column="creator"/>
+        <result property="createtime" column="createtime"/>
+    </resultMap>
+
+    <select id="selectOneByTokenId" resultType="com.xunta.antchainservice.entity.my_erc1155.TokenBalanceEntity">
+        SELECT tokenid, mintcount, remaincount, creator, createtime FROM t_token_balance WHERE tokenid = #{tokenid}
+    </select>
+
+    <select id="selectAll" resultType="com.xunta.antchainservice.entity.my_erc1155.TokenBalanceEntity">
+        SELECT tokenid, mintcount, remaincount, creator, createtime FROM t_token_balance
+    </select>
+
+    <select id="selectNByCreator" resultType="com.xunta.antchainservice.entity.my_erc1155.TokenBalanceEntity">
+        SELECT tokenid, mintcount, remaincount, creator, createtime FROM t_token_balance WHERE creator = #{creator}
+    </select>
+
+
+
+    <insert id="insert" parameterType="com.xunta.antchainservice.entity.my_erc1155.TokenBalanceEntity" keyProperty="tokenid">
+        insert into
+        t_token_balance(tokenid, mintcount, remaincount, creator, createtime)
+        values(#{tokenid}, #{mintcount}, #{remaincount}, #{creator}, #{createtime})
+    </insert>
+
+    <delete id="delete">
+        delete from
+        t_token_balance
+        where tokenid=#{tokenid}
+    </delete>
+
+    <update id="update" parameterType="com.xunta.antchainservice.entity.my_erc1155.TokenBalanceEntity" keyProperty="tokenid" useGeneratedKeys="true">
+        update t_token_balance
+        <set>
+            <if test="mintcount != null"> mintcount = #{mintcount},</if>
+            <if test="remaincount != null"> remaincount = #{remaincount},</if>
+            <if test="creator != null"> creator = #{creator},</if>
+            <if test="createtime != null"> createtime = #{createtime},</if>
+        </set>
+        where tokenid = #{tokenid}
+    </update>
+</mapper>
