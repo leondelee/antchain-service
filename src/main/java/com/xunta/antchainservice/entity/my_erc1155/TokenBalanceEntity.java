@@ -6,6 +6,7 @@ public class TokenBalanceEntity {
     private Long remaincount;
     private String creator;
     private String createtime;
+    private String hash;
 
     public Long getTokenId() {
         return tokenid;
@@ -47,9 +48,18 @@ public class TokenBalanceEntity {
         createtime = ct;
     }
 
+    public String getHash() {
+        return hash;
+    }
+
+    public void setHash(String hs) {
+        hash = hs;
+    }
+
 
     @Override
     public String toString() {
-        return "Token id is: " + tokenid + ", remain count is: ," + remaincount + ", creator  is: " + creator + ", create time is: " + createtime;
+        return "Token id is: " + tokenid + ", remain count is: ," + remaincount + ", creator  is: " + creator + ", create time is: "
+                + ", hash is: " + hash;
     }
 }

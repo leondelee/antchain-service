@@ -1,6 +1,5 @@
 package com.xunta.antchainservice.bean.response;
 
-import com.xunta.antchainservice.controller.CollectionController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

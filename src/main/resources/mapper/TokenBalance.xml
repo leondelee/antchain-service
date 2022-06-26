@@ -7,26 +7,27 @@
         <result property="remaincount" column="remaincount"/>
         <result property="creator" column="creator"/>
         <result property="createtime" column="createtime"/>
+        <result property="hash" column="hash"/>
     </resultMap>
 
     <select id="selectOneByTokenId" resultType="com.xunta.antchainservice.entity.my_erc1155.TokenBalanceEntity">
-        SELECT tokenid, mintcount, remaincount, creator, createtime FROM t_token_balance WHERE tokenid = #{tokenid}
+        SELECT tokenid, mintcount, remaincount, creator, createtime, hash FROM t_token_balance WHERE tokenid = #{tokenid}
     </select>
 
     <select id="selectAll" resultType="com.xunta.antchainservice.entity.my_erc1155.TokenBalanceEntity">
-        SELECT tokenid, mintcount, remaincount, creator, createtime FROM t_token_balance
+        SELECT tokenid, mintcount, remaincount, creator, createtime, hash FROM t_token_balance
     </select>
 
     <select id="selectNByCreator" resultType="com.xunta.antchainservice.entity.my_erc1155.TokenBalanceEntity">
-        SELECT tokenid, mintcount, remaincount, creator, createtime FROM t_token_balance WHERE creator = #{creator}
+        SELECT tokenid, mintcount, remaincount, creator, createtime, hash FROM t_token_balance WHERE creator = #{creator}
     </select>
 
 
 
     <insert id="insert" parameterType="com.xunta.antchainservice.entity.my_erc1155.TokenBalanceEntity" keyProperty="tokenid">
         insert into
-        t_token_balance(tokenid, mintcount, remaincount, creator, createtime)
-        values(#{tokenid}, #{mintcount}, #{remaincount}, #{creator}, #{createtime})
+        t_token_balance(tokenid, mintcount, remaincount, creator, createtime, hash)
+        values(#{tokenid}, #{mintcount}, #{remaincount}, #{creator}, #{createtime}, #{hash})
     </insert>
 
     <delete id="delete">
@@ -42,6 +43,7 @@
             <if test="remaincount != null"> remaincount = #{remaincount},</if>
             <if test="creator != null"> creator = #{creator},</if>
             <if test="createtime != null"> createtime = #{createtime},</if>
+            <if test="hash != null"> hash = #{hash},</if>
         </set>
         where tokenid = #{tokenid}
     </update>

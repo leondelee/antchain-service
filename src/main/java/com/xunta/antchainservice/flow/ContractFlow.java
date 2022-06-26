@@ -5,30 +5,19 @@
 package com.xunta.antchainservice.flow;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.alipay.mychain.sdk.api.utils.Utils;
 import com.alipay.mychain.sdk.common.VMTypeEnum;
-import com.alipay.mychain.sdk.domain.account.Identity;
-import com.alipay.mychain.sdk.utils.ByteUtils;
 import com.antfinancial.mychain.baas.tool.restclient.RestClient;
 import com.antfinancial.mychain.baas.tool.restclient.RestClientProperties;
 import com.antfinancial.mychain.baas.tool.restclient.model.CallRestBizParam;
-import com.antfinancial.mychain.baas.tool.restclient.model.ClientParam;
 import com.antfinancial.mychain.baas.tool.restclient.model.Method;
 import com.antfinancial.mychain.baas.tool.restclient.response.BaseResp;
-import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
-import com.xunta.antchainservice.controller.CollectionController;
-import org.apache.commons.io.FileUtils;
 import org.bouncycastle.util.encoders.Base64;
 import org.bouncycastle.util.encoders.Hex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.io.File;
-import java.math.BigInteger;
-import java.util.UUID;
 
 import com.alibaba.fastjson.JSONArray;
 

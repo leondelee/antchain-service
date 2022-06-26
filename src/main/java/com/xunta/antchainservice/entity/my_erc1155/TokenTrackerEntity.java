@@ -7,6 +7,7 @@ public class TokenTrackerEntity {
     private String owner;
     private String createtime;
     private String lastupdatetime;
+    private String hash;
 
     public Long getTokenId() {
         return tokenid;
@@ -56,9 +57,17 @@ public class TokenTrackerEntity {
         lastupdatetime = lt;
     }
 
+    public String getHash() {
+        return hash;
+    }
+
+    public void setHash(String hs) {
+        hash = hs;
+    }
+
     @Override
     public String toString() {
         return "Token id is: " + tokenid + ", subTokenId is: ," + subtokenid + ", creator is: " + creator + ", owner is: " + owner
-                + ", create time is: " + createtime + ", last update time is: " + lastupdatetime;
+                + ", create time is: " + createtime + ", last update time is: " + lastupdatetime + ", hash is: " + hash;
     }
 }

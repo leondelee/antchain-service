@@ -7,7 +7,10 @@ import com.antfinancial.mychain.baas.tool.restclient.RestClientProperties;
 import com.antfinancial.mychain.baas.tool.restclient.model.CallRestBizParam;
 import com.antfinancial.mychain.baas.tool.restclient.model.Method;
 import com.antfinancial.mychain.baas.tool.restclient.response.BaseResp;
+import com.xunta.antchainservice.bean.contract.BatchInfoResponse;
 import com.xunta.antchainservice.bean.contract.ContractTxResponse;
+import com.xunta.antchainservice.bean.contract.BatchListResponse;
+import com.xunta.antchainservice.bean.contract.TokenInfoResponse;
 import com.xunta.antchainservice.entity.my_erc1155.TokenBalanceEntity;
 import com.xunta.antchainservice.entity.my_erc1155.TokenTrackerEntity;
 import com.xunta.antchainservice.service.my_erc1155.TokenBalanceService;
@@ -18,7 +21,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class MyERC1155 {
@@ -53,6 +59,55 @@ public class MyERC1155 {
                 .tenantid(restClientProperties.getTenantid())
                 .gas(1000000L).build();
         return restClient.chainCallForBiz(callRestBizParam);
+    }
+
+    public BatchListResponse getAllBatches() {
+        BatchListResponse rsp = new BatchListResponse();
+        List<TokenBalanceEntity> batches = tokenBalanceService.selectAll();
+        List<Map<String, String>> resList = new ArrayList<Map<String, String>>();
+        for(TokenBalanceEntity balanceEntity: batches) {
+            Map<String, String> tmp = new HashMap<String, String>();
+            tmp.put("tokenId", String.valueOf(balanceEntity.getTokenId()));
+            tmp.put("createTime", balanceEntity.getCreateTime());
+            tmp.put("remainCount", String.valueOf(balanceEntity.getRemainCount()));
+            tmp.put("mintCount", String.valueOf(balanceEntity.getMintCount()));
+            tmp.put("creator", balanceEntity.getCreator());
+            resList.add(tmp);
+        }
+        rsp.resultList = resList;
+        return rsp;
+    }
+
+    public BatchInfoResponse getBatchInfo(Long tokenId) {
+        BatchInfoResponse rsp = new BatchInfoResponse();
+        TokenBalanceEntity tokenBalanceEntity = tokenBalanceService.selectOneByTokenId(tokenId);
+        if(tokenBalanceEntity == null) {
+            return rsp;
+        }
+        String uri = getTokenUri(tokenId);
+        rsp.tokenId = tokenId;
+        rsp.tokenUri = uri;
+        rsp.creator = tokenBalanceEntity.getCreator();
+        rsp.createTime = tokenBalanceEntity.getCreateTime();
+        rsp.remainCount = tokenBalanceEntity.getRemainCount();
+        return rsp;
+    }
+
+    public TokenInfoResponse getTokenInfo(Long tokenId, Long subTokenId) {
+        TokenInfoResponse rsp = new TokenInfoResponse();
+        TokenTrackerEntity tokenTrackerEntity = tokenTrackerService.selectOneBySubTokenId(tokenId, subTokenId);
+        if(tokenTrackerEntity == null) {
+            return rsp;
+        }
+        rsp.tokenId = tokenId;
+        rsp.subTokenId = subTokenId;
+        rsp.tokenUri = getTokenUri(tokenId);
+        rsp.creator = tokenTrackerEntity.getCreator();
+        rsp.createTime = tokenTrackerEntity.getCreateTime();
+        rsp.owner = tokenTrackerEntity.getOwner();
+        rsp.lastUpdateTime = tokenTrackerEntity.getLastUpdateTime();
+        rsp.hash = tokenTrackerEntity.getHash();
+        return rsp;
     }
 
     public Long getBatchCount() {
@@ -204,5 +259,27 @@ public class MyERC1155 {
                 return rsp;
             }
         }
+    }
+
+    public ContractTxResponse burn(Long tokenId, Long subTokenId, String from) {
+        // only tokens that are sold can be burned
+        ContractTxResponse rsp = new ContractTxResponse();
+        rsp.success = true;
+        TokenTrackerEntity tokenTrackerEntity = tokenTrackerService.selectOneBySubTokenId(tokenId, subTokenId);
+        if(tokenTrackerEntity == null) {
+            rsp.success = false;
+            rsp.message = "Token is not already sold";
+        }
+        else {
+            String owner = tokenTrackerEntity.getOwner();
+            if(!owner.equals(from)) {
+                rsp.success = false;
+                rsp.message = "From is not owner!";
+            }
+            else {
+                tokenTrackerService.deleteOneBySubTokenId(tokenId, subTokenId);
+            }
+        }
+        return rsp;
     }
 }

@@ -8,28 +8,29 @@
         <result property="owner" column="owner"/>
         <result property="createtime" column="createtime"/>
         <result property="lastupdatetime" column="lastupdatetime"/>
+        <result property="hash" column="hash"/>
     </resultMap>
 
     <select id="selectNByTokenId" resultType="com.xunta.antchainservice.entity.my_erc1155.TokenTrackerEntity">
-        SELECT tokenid, subtokenid, creator, owner, createtime, lastupdatetime FROM t_token_tracker WHERE tokenid = #{tokenid} and subtokenid=#{subtokenid}
+        SELECT tokenid, subtokenid, creator, owner, createtime, lastupdatetime, hash FROM t_token_tracker WHERE tokenid = #{tokenid} and subtokenid=#{subtokenid}
     </select>
 
     <select id="selectOneBySubTokenId" resultType="com.xunta.antchainservice.entity.my_erc1155.TokenTrackerEntity">
-        SELECT tokenid, subtokenid, creator, owner, createtime, lastupdatetime FROM t_token_tracker WHERE subtokenid = #{subtokenid} and tokenid=#{tokenid}
+        SELECT tokenid, subtokenid, creator, owner, createtime, lastupdatetime, hash FROM t_token_tracker WHERE subtokenid = #{subtokenid} and tokenid=#{tokenid}
     </select>
 
     <select id="selectNByCreator" resultType="com.xunta.antchainservice.entity.my_erc1155.TokenTrackerEntity">
-        SELECT tokenid, subtokenid, creator, owner, createtime, lastupdatetime FROM t_token_tracker WHERE creator = #{creator}
+        SELECT tokenid, subtokenid, creator, owner, createtime, lastupdatetime, hash FROM t_token_tracker WHERE creator = #{creator}
     </select>
 
     <select id="selectNByOwner" resultType="com.xunta.antchainservice.entity.my_erc1155.TokenTrackerEntity">
-        SELECT tokenid, subtokenid, creator, owner, createtime, lastupdatetime FROM t_token_tracker WHERE owner = #{owner}
+        SELECT tokenid, subtokenid, creator, owner, createtime, lastupdatetime, hash FROM t_token_tracker WHERE owner = #{owner}
     </select>
 
     <insert id="insert" parameterType="com.xunta.antchainservice.entity.my_erc1155.TokenTrackerEntity" keyProperty="tokenid,subtokenid" keyColumn="tokenid">
         insert into
-        t_token_tracker(tokenid, subtokenid, creator, owner, createtime, lastupdatetime)
-        values(#{tokenid}, #{subtokenid}, #{creator}, #{owner}, #{createtime}, #{lastupdatetime})
+        t_token_tracker(tokenid, subtokenid, creator, owner, createtime, lastupdatetime, hash)
+        values(#{tokenid}, #{subtokenid}, #{creator}, #{owner}, #{createtime}, #{lastupdatetime}, #{hash})
     </insert>
 
     <delete id="deleteAllByTokenId">
@@ -51,6 +52,7 @@
             <if test="owner != null"> owner = #{owner},</if>
             <if test="createtime != null"> createtime = #{createtime},</if>
             <if test="lastupdatetime != null"> lastupdatetime = #{lastupdatetime},</if>
+            <if test="hash != null"> hash = #{hash},</if>
         </set>
         where tokenid = #{tokenid} and subtokenid=#{subtokenid}
     </update>
