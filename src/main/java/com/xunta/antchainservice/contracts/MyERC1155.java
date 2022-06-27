@@ -11,8 +11,10 @@ import com.xunta.antchainservice.bean.contract.BatchInfoResponse;
 import com.xunta.antchainservice.bean.contract.ContractTxResponse;
 import com.xunta.antchainservice.bean.contract.BatchListResponse;
 import com.xunta.antchainservice.bean.contract.TokenInfoResponse;
+import com.xunta.antchainservice.entity.CollectionBuyLockerEntity;
 import com.xunta.antchainservice.entity.my_erc1155.TokenBalanceEntity;
 import com.xunta.antchainservice.entity.my_erc1155.TokenTrackerEntity;
+import com.xunta.antchainservice.service.my_erc1155.CollectionBuyLockerService;
 import com.xunta.antchainservice.service.my_erc1155.TokenBalanceService;
 import com.xunta.antchainservice.service.my_erc1155.TokenTrackerService;
 import org.slf4j.Logger;
@@ -42,6 +44,9 @@ public class MyERC1155 {
 
     @Autowired
     private TokenBalanceService tokenBalanceService;
+
+    @Autowired
+    private CollectionBuyLockerService collectionBuyLockerService;
 
     private BaseResp _chainCall(String modelSignature, String inputList, String outputTypes) throws Exception {
         String orderId = "order_" + System.currentTimeMillis();
@@ -95,12 +100,12 @@ public class MyERC1155 {
 
     public TokenInfoResponse getTokenInfo(Long tokenId, Long subTokenId) {
         TokenInfoResponse rsp = new TokenInfoResponse();
+        rsp.tokenId = tokenId;
+        rsp.subTokenId = subTokenId;
         TokenTrackerEntity tokenTrackerEntity = tokenTrackerService.selectOneBySubTokenId(tokenId, subTokenId);
         if(tokenTrackerEntity == null) {
             return rsp;
         }
-        rsp.tokenId = tokenId;
-        rsp.subTokenId = subTokenId;
         rsp.tokenUri = getTokenUri(tokenId);
         rsp.creator = tokenTrackerEntity.getCreator();
         rsp.createTime = tokenTrackerEntity.getCreateTime();
@@ -185,6 +190,7 @@ public class MyERC1155 {
                 String dataStr = rsp.getData();
                 if(! dataStr.equals("")) {
                     long tokenIdx = JSON.parseObject(dataStr).getJSONArray("outRes").getBigInteger(0).longValue();
+                    // add token balance db
                     TokenBalanceEntity tokenBalanceEntity = new TokenBalanceEntity();
                     tokenBalanceEntity.setTokenId(tokenIdx);
                     tokenBalanceEntity.setMintCount(_count);
@@ -192,6 +198,12 @@ public class MyERC1155 {
                     tokenBalanceEntity.setCreator(_from);
                     tokenBalanceEntity.setCreateTime(String.valueOf(System.currentTimeMillis() / 1000));
                     tokenBalanceService.insert(tokenBalanceEntity);
+
+                    // add buy locker db
+                    CollectionBuyLockerEntity collectionBuyLockerEntity = new CollectionBuyLockerEntity();
+                    collectionBuyLockerEntity.tokenid = tokenIdx;
+                    collectionBuyLockerEntity.locknumber = _count;
+                    collectionBuyLockerService.insert(collectionBuyLockerEntity);
                 }
                 msgRsp.success = true;
             } else {
@@ -268,7 +280,7 @@ public class MyERC1155 {
         TokenTrackerEntity tokenTrackerEntity = tokenTrackerService.selectOneBySubTokenId(tokenId, subTokenId);
         if(tokenTrackerEntity == null) {
             rsp.success = false;
-            rsp.message = "Token is not already sold";
+            rsp.message = "Token is not yet sold";
         }
         else {
             String owner = tokenTrackerEntity.getOwner();

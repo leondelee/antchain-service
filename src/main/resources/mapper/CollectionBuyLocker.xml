@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xunta.antchainservice.dao.CollectionBuyLockerDao">
+    <resultMap id="BaseResultMap" type="com.xunta.antchainservice.entity.CollectionBuyLockerEntity">
+        <result property="tokenid" column="tokenid"/>
+        <result property="locknumber" column="locknumber"/>
+    </resultMap>
+
+    <select id="selectOneByTokenId" resultType="com.xunta.antchainservice.entity.CollectionBuyLockerEntity">
+        SELECT tokenid, locknumber FROM t_collection_buy_locker WHERE tokenid = #{tokenid}
+    </select>
+
+    <insert id="insert" parameterType="com.xunta.antchainservice.entity.CollectionBuyLockerEntity" keyProperty="tokenid" keyColumn="tokenid">
+        insert into
+        t_collection_buy_locker(tokenid, locknumber)
+        values(#{tokenid}, #{locknumber})
+    </insert>
+
+    <delete id="delete">
+        delete from
+        t_collection_buy_locker
+        where tokenid=#{tokenid}
+    </delete>
+
+    <update id="update" parameterType="com.xunta.antchainservice.entity.CollectionBuyLockerEntity" keyProperty="tokenid" useGeneratedKeys="true">
+        update t_collection_buy_locker
+        <set>
+            <if test="locknumber != null"> locknumber = #{locknumber},</if>
+        </set>
+        where tokenid = #{tokenid}
+    </update>
+</mapper>
