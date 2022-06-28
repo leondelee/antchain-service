@@ -7,6 +7,8 @@ public class TokenBalanceEntity {
     private String creator;
     private String createtime;
     private String hash;
+    private String title;
+    private String description;
 
     public Long getTokenId() {
         return tokenid;
@@ -54,6 +56,22 @@ public class TokenBalanceEntity {
 
     public void setHash(String hs) {
         hash = hs;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String hs) {
+        title = hs;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String hs) {
+        description = hs;
     }
 
 

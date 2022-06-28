@@ -1,4 +1,4 @@
-package com.xunta.antchainservice.service.my_erc1155;
+package com.xunta.antchainservice.service;
 
 import com.xunta.antchainservice.dao.CollectionBuyLockerDao;
 import com.xunta.antchainservice.entity.CollectionBuyLockerEntity;

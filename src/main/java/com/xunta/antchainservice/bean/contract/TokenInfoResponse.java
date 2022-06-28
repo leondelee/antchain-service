@@ -9,4 +9,6 @@ public class TokenInfoResponse {
     public String owner;
     public String lastUpdateTime;
     public String hash;
+    public String title;
+    public String description;
 }

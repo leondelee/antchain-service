@@ -13,6 +13,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.util.Base64;
+
 @RestController
 public class ContractController {
     // 藏品接口
@@ -113,7 +117,7 @@ public class ContractController {
     // transaction
     @PostMapping("/api/contract/erc1155/batch_mint")
     public Response batchMint(@RequestBody BatchMintRequest batchMintRequest) throws Exception {
-        ContractTxResponse rsp = myERC1155.batchMint(batchMintRequest.uri, batchMintRequest.count, batchMintRequest.from);
+        ContractTxResponse rsp = myERC1155.batchMint(batchMintRequest);
         if(rsp.success) return ResponseBuilder.ok(rsp);
         else return ResponseBuilder.error(rsp.message);
     }

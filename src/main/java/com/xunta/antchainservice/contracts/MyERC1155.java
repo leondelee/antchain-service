@@ -7,16 +7,14 @@ import com.antfinancial.mychain.baas.tool.restclient.RestClientProperties;
 import com.antfinancial.mychain.baas.tool.restclient.model.CallRestBizParam;
 import com.antfinancial.mychain.baas.tool.restclient.model.Method;
 import com.antfinancial.mychain.baas.tool.restclient.response.BaseResp;
-import com.xunta.antchainservice.bean.contract.BatchInfoResponse;
-import com.xunta.antchainservice.bean.contract.ContractTxResponse;
-import com.xunta.antchainservice.bean.contract.BatchListResponse;
-import com.xunta.antchainservice.bean.contract.TokenInfoResponse;
+import com.xunta.antchainservice.bean.contract.*;
 import com.xunta.antchainservice.entity.CollectionBuyLockerEntity;
 import com.xunta.antchainservice.entity.my_erc1155.TokenBalanceEntity;
 import com.xunta.antchainservice.entity.my_erc1155.TokenTrackerEntity;
-import com.xunta.antchainservice.service.my_erc1155.CollectionBuyLockerService;
+import com.xunta.antchainservice.service.CollectionBuyLockerService;
 import com.xunta.antchainservice.service.my_erc1155.TokenBalanceService;
 import com.xunta.antchainservice.service.my_erc1155.TokenTrackerService;
+import com.xunta.antchainservice.utils.HashUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,18 +66,7 @@ public class MyERC1155 {
 
     public BatchListResponse getAllBatches() {
         BatchListResponse rsp = new BatchListResponse();
-        List<TokenBalanceEntity> batches = tokenBalanceService.selectAll();
-        List<Map<String, String>> resList = new ArrayList<Map<String, String>>();
-        for(TokenBalanceEntity balanceEntity: batches) {
-            Map<String, String> tmp = new HashMap<String, String>();
-            tmp.put("tokenId", String.valueOf(balanceEntity.getTokenId()));
-            tmp.put("createTime", balanceEntity.getCreateTime());
-            tmp.put("remainCount", String.valueOf(balanceEntity.getRemainCount()));
-            tmp.put("mintCount", String.valueOf(balanceEntity.getMintCount()));
-            tmp.put("creator", balanceEntity.getCreator());
-            resList.add(tmp);
-        }
-        rsp.resultList = resList;
+        rsp.resultList = tokenBalanceService.selectAll();
         return rsp;
     }
 
@@ -95,6 +82,8 @@ public class MyERC1155 {
         rsp.creator = tokenBalanceEntity.getCreator();
         rsp.createTime = tokenBalanceEntity.getCreateTime();
         rsp.remainCount = tokenBalanceEntity.getRemainCount();
+        rsp.title = tokenBalanceEntity.getTitle();
+        rsp.description = tokenBalanceEntity.getDescription();
         return rsp;
     }
 
@@ -103,7 +92,8 @@ public class MyERC1155 {
         rsp.tokenId = tokenId;
         rsp.subTokenId = subTokenId;
         TokenTrackerEntity tokenTrackerEntity = tokenTrackerService.selectOneBySubTokenId(tokenId, subTokenId);
-        if(tokenTrackerEntity == null) {
+        TokenBalanceEntity tokenBalanceEntity = tokenBalanceService.selectOneByTokenId(tokenId);
+        if(tokenTrackerEntity == null || tokenBalanceEntity == null) {
             return rsp;
         }
         rsp.tokenUri = getTokenUri(tokenId);
@@ -112,6 +102,8 @@ public class MyERC1155 {
         rsp.owner = tokenTrackerEntity.getOwner();
         rsp.lastUpdateTime = tokenTrackerEntity.getLastUpdateTime();
         rsp.hash = tokenTrackerEntity.getHash();
+        rsp.title = tokenBalanceEntity.getTitle();
+        rsp.description = tokenBalanceEntity.getDescription();
         return rsp;
     }
 
@@ -175,7 +167,12 @@ public class MyERC1155 {
     }
 
     // transaction
-    public ContractTxResponse batchMint(String _uri, Long _count, String _from) {
+    public ContractTxResponse batchMint(BatchMintRequest batchMintRequest) {
+        String _uri = batchMintRequest.uri;
+        Long _count = batchMintRequest.count;
+        String  _from = batchMintRequest.from;
+        String title = batchMintRequest.title;
+        String description = batchMintRequest.description;
         ContractTxResponse msgRsp = new ContractTxResponse();
         String modelSignature = "batchMint(string,uint256)";
         JSONArray inputList = new JSONArray();
@@ -197,6 +194,8 @@ public class MyERC1155 {
                     tokenBalanceEntity.setRemainCount(_count);
                     tokenBalanceEntity.setCreator(_from);
                     tokenBalanceEntity.setCreateTime(String.valueOf(System.currentTimeMillis() / 1000));
+                    tokenBalanceEntity.setTitle(title);
+                    tokenBalanceEntity.setDescription(description);
                     tokenBalanceService.insert(tokenBalanceEntity);
 
                     // add buy locker db
@@ -250,6 +249,7 @@ public class MyERC1155 {
                 tokenTrackerEntity.setSubTokenId(subTokenId);
                 tokenTrackerEntity.setCreateTime(tokenBalanceEntity.getCreateTime());
                 tokenTrackerEntity.setLastUpdateTime(String.valueOf(System.currentTimeMillis() / 1000));
+                tokenTrackerEntity.setHash(HashUtils.generateSHA256String(tokenId + "_" + subTokenId + "_hash"));
                 tokenBalanceService.update(tokenBalanceEntity);
                 tokenTrackerService.insert(tokenTrackerEntity);
                 rsp.success = true;

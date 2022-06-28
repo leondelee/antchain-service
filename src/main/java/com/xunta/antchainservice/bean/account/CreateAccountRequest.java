@@ -1,6 +1,5 @@
 package com.xunta.antchainservice.bean.account;
 
-public class AccountNameResponse {
+public class CreateAccountRequest {
     public String accountName;
-    public String accountAddress;
 }

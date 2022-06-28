@@ -6,4 +6,6 @@ public class BatchInfoResponse {
     public String creator;
     public String createTime;
     public Long remainCount;
+    public String title;
+    public String description;
 }
