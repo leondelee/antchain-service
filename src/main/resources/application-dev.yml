@@ -1,5 +1,5 @@
 server:
-  port: 8001
+  port: 7001
 mysql:
   url: jdbc:mysql://49.234.137.37:13802/db_bbsgo?characterEncoding=utf-8
   username: bbsgo_user
