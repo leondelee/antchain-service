@@ -11,7 +11,7 @@
         <relativePath/>
     </parent>
 
-    <groupId>com.alipay.antchainservice</groupId>
+    <groupId>com.xunta.antchainservice</groupId>
     <artifactId>antchain-svr</artifactId>
     <version>1.0-SNAPSHOT</version>
 
@@ -140,6 +140,12 @@
                 <targetPath>BOOT-INF/lib/</targetPath>
                 <includes>
                     <include>**/*.jar</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*</include>
                 </includes>
             </resource>
         </resources>

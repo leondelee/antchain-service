@@ -1,7 +1,7 @@
 server:
   port: 7001
 mysql:
-  url: jdbc:mysql://49.234.137.37:13802/db_bbsgo?characterEncoding=utf-8
+  url: jdbc:mysql://127.0.0.1:13802/db_bbsgo?characterEncoding=utf-8
   username: bbsgo_user
   password: bbsgo_user123456789
   driverClassName: com.mysql.jdbc.Driver
