@@ -1,5 +1,13 @@
 package com.xunta.antchainservice.entity.my_erc1155;
 
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
+@Data
+@Setter
+@Getter
+
 public class TokenBalanceEntity {
     private Long tokenid;
     private Long mintcount;
@@ -9,6 +17,7 @@ public class TokenBalanceEntity {
     private String hash;
     private String title;
     private String description;
+    private double price;
 
     public Long getTokenId() {
         return tokenid;

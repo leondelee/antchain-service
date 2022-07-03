@@ -8,4 +8,5 @@ public class BatchInfoResponse {
     public Long remainCount;
     public String title;
     public String description;
+    public double price;
 }

@@ -6,4 +6,5 @@ public class BatchMintRequest {
     public String from;
     public String title;
     public String description;
+    public double price;
 }

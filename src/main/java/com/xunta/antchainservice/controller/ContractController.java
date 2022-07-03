@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
-import java.util.Base64;
 
 @RestController
 public class ContractController {
@@ -48,6 +47,14 @@ public class ContractController {
     public Response getTokenInfo(@RequestBody ContractCallRequest contractCallRequest) throws Exception {
         TokenInfoResponse rsp = myERC1155.getTokenInfo(contractCallRequest.tokenId, contractCallRequest.subTokenId);
         return ResponseBuilder.ok(rsp);
+    }
+
+    @PostMapping("/api/contract/erc1155/get_max_sub_token_id")
+    public Response getMaxSubTokenId(@RequestBody ContractCallRequest contractCallRequest) throws Exception {
+        Long id = myERC1155.getMaxSubTokenId(contractCallRequest.tokenId);
+        Response rsp = new Response();
+        rsp.setData(id);
+        return ResponseBuilder.ok(id);
     }
 
     @PostMapping("/api/contract/erc1155/get_batch_count")

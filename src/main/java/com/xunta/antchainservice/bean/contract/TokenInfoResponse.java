@@ -11,4 +11,5 @@ public class TokenInfoResponse {
     public String hash;
     public String title;
     public String description;
+    public double price;
 }

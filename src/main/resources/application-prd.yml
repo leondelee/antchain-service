@@ -1,12 +1,12 @@
-spring:
-  profiles:
-    active: prd
-  resources:
-    add-mappings: false
-
-mybatis:
-  mapper-locations: classpath:mapper/*.xml
-
+server:
+  port: 7001
+mysql:
+  url: jdbc:mysql://127.0.0.1:13802/db_bbsgo?characterEncoding=utf-8
+  username: bbsgo_user
+  password: bbsgo_user123456789
+  driverClassName: com.mysql.jdbc.Driver
+logic:
+  variable: "yaml variable 123"
 mychain:
   rest:
     bizid: a00e36c5
@@ -19,5 +19,5 @@ mychain:
     default-account-pwd: LEEnideshengri123!
     tenantid: CUALFHGC
     read-file-from-ext: false
-    account: xunta_tec
+    account: xunta_tech
     kmsId: JiRp6i48CUALFHGC1655742491929

@@ -17,6 +17,10 @@ public class TokenTrackerService {
         return tokenTrackerDao.selectNByTokenId(tokenId);
     }
 
+    public Long selectMaxSubTokenId(Long tokenId) {
+        return tokenTrackerDao.selectMaxSubTokenId(tokenId);
+    }
+
     public TokenTrackerEntity selectOneBySubTokenId(Long tokenId, Long subTokenId) {
         return tokenTrackerDao.selectOneBySubTokenId(tokenId, subTokenId);
     }

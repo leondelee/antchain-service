@@ -10,6 +10,8 @@ import java.util.List;
 public interface TokenTrackerDao {
     List<TokenTrackerEntity> selectNByTokenId(@Param("tokenid") Long tokenId);
 
+    Long selectMaxSubTokenId(@Param("tokenid") Long tokenId);
+
     TokenTrackerEntity selectOneBySubTokenId(@Param("tokenid") Long tokenId, @Param("subtokenid") Long subTokenId);
 
     List<TokenTrackerEntity> selectNByCreator(@Param("creator") String creator);

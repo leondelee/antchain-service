@@ -27,6 +27,10 @@
         SELECT tokenid, subtokenid, creator, owner, createtime, lastupdatetime, hash FROM t_token_tracker WHERE owner = #{owner}
     </select>
 
+    <select id="selectMaxSubTokenId" resultType="java.lang.Long">
+        SELECT MAX(subtokenid) FROM t_token_tracker WHERE tokenid = #{tokenid}
+    </select>
+
     <insert id="insert" parameterType="com.xunta.antchainservice.entity.my_erc1155.TokenTrackerEntity" keyProperty="tokenid,subtokenid" keyColumn="tokenid">
         insert into
         t_token_tracker(tokenid, subtokenid, creator, owner, createtime, lastupdatetime, hash)
