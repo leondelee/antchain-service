@@ -6,6 +6,9 @@ import com.xunta.antchainservice.bean.contract.*;
 import com.xunta.antchainservice.bean.response.Response;
 import com.xunta.antchainservice.bean.response.ResponseBuilder;
 import com.xunta.antchainservice.contracts.MyERC1155;
+import com.xunta.antchainservice.entity.my_erc1155.TokenBalanceEntity;
+import com.xunta.antchainservice.entity.my_erc1155.TokenEntity;
+import com.xunta.antchainservice.entity.my_erc1155.TokenTrackerEntity;
 import com.xunta.antchainservice.service.my_erc1155.TokenBalanceService;
 import com.xunta.antchainservice.service.my_erc1155.TokenTrackerService;
 import org.slf4j.Logger;
@@ -15,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class ContractController {
@@ -34,6 +39,19 @@ public class ContractController {
     @PostMapping("/api/contract/erc1155/get_all_batches")
     public Response getAllBatches() throws Exception {
         BatchListResponse rsp = myERC1155.getAllBatches();
+        return ResponseBuilder.ok(rsp);
+    }
+
+    @PostMapping("/api/contract/erc1155/get_purchased_tokens")
+    public Response getPurchasedTokens(@RequestBody ContractCallRequest contractCallRequest ) throws Exception {
+        TokenListResponse rsp = new TokenListResponse();
+        List<TokenInfoResponse> resultList = new ArrayList<TokenInfoResponse>();
+        List<TokenTrackerEntity> tokenTracks = tokenTrackerService.selectNByOwner(contractCallRequest.from);
+        for(TokenTrackerEntity tokenTrackerEntity: tokenTracks) {
+            TokenInfoResponse tokenInfo = myERC1155.getTokenInfo(tokenTrackerEntity.getTokenId(), tokenTrackerEntity.getSubTokenId());
+            resultList.add(tokenInfo);
+        }
+        rsp.resultList = resultList;
         return ResponseBuilder.ok(rsp);
     }
 
@@ -83,7 +101,8 @@ public class ContractController {
 
     @PostMapping("/api/contract/erc1155/get_token_uri")
     public Response getTokenUri(@RequestBody ContractCallRequest contractCallRequest) {
-        String uri = myERC1155.getTokenUri(contractCallRequest.tokenId);
+        TokenBalanceEntity tokenBalanceEntity = tokenBalanceService.selectOneByTokenId(contractCallRequest.tokenId);
+        String uri =tokenBalanceEntity.getTokenuri();
         ContractCallResponse rsp = new ContractCallResponse();
         rsp.data = uri;
         return ResponseBuilder.ok(rsp);

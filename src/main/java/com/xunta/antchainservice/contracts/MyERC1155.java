@@ -76,9 +76,8 @@ public class MyERC1155 {
         if(tokenBalanceEntity == null) {
             return rsp;
         }
-        String uri = getTokenUri(tokenId);
         rsp.tokenId = tokenId;
-        rsp.tokenUri = uri;
+        rsp.tokenUri = tokenBalanceEntity.getTokenuri();
         rsp.creator = tokenBalanceEntity.getCreator();
         rsp.createTime = tokenBalanceEntity.getCreateTime();
         rsp.remainCount = tokenBalanceEntity.getRemainCount();
@@ -97,7 +96,7 @@ public class MyERC1155 {
         if(tokenTrackerEntity == null || tokenBalanceEntity == null) {
             return rsp;
         }
-        rsp.tokenUri = getTokenUri(tokenId);
+        rsp.tokenUri = tokenBalanceEntity.getTokenuri();
         rsp.creator = tokenTrackerEntity.getCreator();
         rsp.createTime = tokenTrackerEntity.getCreateTime();
         rsp.owner = tokenTrackerEntity.getOwner();
@@ -150,7 +149,7 @@ public class MyERC1155 {
         return tokenTrackerEntity == null ? "" : tokenTrackerEntity.getLastUpdateTime();
     }
 
-    public String getTokenUri(Long tokenId) {
+    public String getTokenUriFromChain(Long tokenId) {
         String modelSignature = "getTokenUri(uint256)";
         JSONArray inputList = new JSONArray();
         JSONArray outTypes = new JSONArray();
@@ -206,6 +205,7 @@ public class MyERC1155 {
                     tokenBalanceEntity.setTitle(title);
                     tokenBalanceEntity.setDescription(description);
                     tokenBalanceEntity.setPrice(price);
+                    tokenBalanceEntity.setTokenuri(_uri);
                     tokenBalanceService.insert(tokenBalanceEntity);
 
                     // add buy locker db

@@ -18,6 +18,7 @@ public class TokenBalanceEntity {
     private String title;
     private String description;
     private double price;
+    private String tokenuri;
 
     public Long getTokenId() {
         return tokenid;
