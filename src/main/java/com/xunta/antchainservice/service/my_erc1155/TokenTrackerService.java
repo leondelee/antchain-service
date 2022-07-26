@@ -25,6 +25,10 @@ public class TokenTrackerService {
         return tokenTrackerDao.selectOneBySubTokenId(tokenId, subTokenId);
     }
 
+    public TokenTrackerEntity selectOneByHash(String hash) {
+        return tokenTrackerDao.selectOneByHash(hash);
+    }
+
     public List<TokenTrackerEntity> selectNByCreator(String creator) {
         return tokenTrackerDao.selectNByCreator(creator);
     }

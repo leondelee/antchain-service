@@ -84,6 +84,8 @@ public class MyERC1155 {
         rsp.title = tokenBalanceEntity.getTitle();
         rsp.description = tokenBalanceEntity.getDescription();
         rsp.price = tokenBalanceEntity.getPrice();
+        rsp.tags = tokenBalanceEntity.getTags();
+        rsp.score = tokenBalanceEntity.getScore();
         return rsp;
     }
 
@@ -105,6 +107,7 @@ public class MyERC1155 {
         rsp.title = tokenBalanceEntity.getTitle();
         rsp.description = tokenBalanceEntity.getDescription();
         rsp.price = tokenBalanceEntity.getPrice();
+        rsp.tags = tokenBalanceEntity.getTags();
         return rsp;
     }
 
@@ -181,6 +184,7 @@ public class MyERC1155 {
         String title = batchMintRequest.title;
         String description = batchMintRequest.description;
         double price = batchMintRequest.price;
+        String tags = batchMintRequest.tags;
         ContractTxResponse msgRsp = new ContractTxResponse();
         String modelSignature = "batchMint(string,uint256)";
         JSONArray inputList = new JSONArray();
@@ -192,6 +196,7 @@ public class MyERC1155 {
         try {
             rsp = _chainCall(modelSignature, JSON.toJSONString(inputList), JSON.toJSONString(outTypes));
             if(rsp != null) {
+                logger.info("res:{}", rsp);
                 String dataStr = rsp.getData();
                 if(! dataStr.equals("")) {
                     long tokenIdx = JSON.parseObject(dataStr).getJSONArray("outRes").getBigInteger(0).longValue();
@@ -206,6 +211,8 @@ public class MyERC1155 {
                     tokenBalanceEntity.setDescription(description);
                     tokenBalanceEntity.setPrice(price);
                     tokenBalanceEntity.setTokenuri(_uri);
+                    tokenBalanceEntity.setTags(tags);
+                    tokenBalanceEntity.setScore(0.0);
                     tokenBalanceService.insert(tokenBalanceEntity);
 
                     // add buy locker db

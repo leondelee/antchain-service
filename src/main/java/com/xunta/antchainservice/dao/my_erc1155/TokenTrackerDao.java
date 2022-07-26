@@ -14,6 +14,8 @@ public interface TokenTrackerDao {
 
     TokenTrackerEntity selectOneBySubTokenId(@Param("tokenid") Long tokenId, @Param("subtokenid") Long subTokenId);
 
+    TokenTrackerEntity selectOneByHash(@Param("hash") String hash);
+
     List<TokenTrackerEntity> selectNByCreator(@Param("creator") String creator);
 
     List<TokenTrackerEntity> selectNByOwner(@Param(("owner")) String owner);

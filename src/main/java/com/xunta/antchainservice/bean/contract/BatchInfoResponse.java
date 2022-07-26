@@ -9,4 +9,6 @@ public class BatchInfoResponse {
     public String title;
     public String description;
     public double price;
+    public String tags;
+    public double score;
 }

@@ -12,4 +12,5 @@ public class TokenInfoResponse {
     public String title;
     public String description;
     public double price;
+    public String tags;
 }

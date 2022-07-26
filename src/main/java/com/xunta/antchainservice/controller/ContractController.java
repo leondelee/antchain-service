@@ -16,8 +16,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigInteger;
-import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +40,7 @@ public class ContractController {
         return ResponseBuilder.ok(rsp);
     }
 
+
     @PostMapping("/api/contract/erc1155/get_purchased_tokens")
     public Response getPurchasedTokens(@RequestBody ContractCallRequest contractCallRequest ) throws Exception {
         TokenListResponse rsp = new TokenListResponse();
@@ -64,6 +63,13 @@ public class ContractController {
     @PostMapping("/api/contract/erc1155/get_token_info")
     public Response getTokenInfo(@RequestBody ContractCallRequest contractCallRequest) throws Exception {
         TokenInfoResponse rsp = myERC1155.getTokenInfo(contractCallRequest.tokenId, contractCallRequest.subTokenId);
+        return ResponseBuilder.ok(rsp);
+    }
+
+    @PostMapping("/api/contract/erc1155/get_token_info_by_hash")
+    public Response getTokenInfoByHash(@RequestBody ContractCallRequest contractCallRequest) throws Exception {
+        TokenTrackerEntity tokenTrackerEntity = tokenTrackerService.selectOneByHash(contractCallRequest.hash);
+        TokenInfoResponse rsp = myERC1155.getTokenInfo(tokenTrackerEntity.getTokenId(), tokenTrackerEntity.getSubTokenId());
         return ResponseBuilder.ok(rsp);
     }
 
